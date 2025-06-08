@@ -2,6 +2,7 @@ import { Plugin } from "./Plugin";
 
 export class LogProvider {
   #originalConsole = {
+    log: console.log,
     error: console.error,
     warn: console.warn,
   };
@@ -18,6 +19,14 @@ export class LogProvider {
 
       this.#plugins.forEach((plugin) => {
         plugin.error(args);
+      });
+    };
+
+    console.log = (...args: any[]) => {
+      this.#originalConsole.log.apply(console, args);
+
+      this.#plugins.forEach((plugin) => {
+        plugin.log(args);
       });
     };
 

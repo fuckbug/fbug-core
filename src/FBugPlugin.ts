@@ -20,7 +20,7 @@ export class FBugPlugin implements Plugin {
       timestamp: new Date(),
     };
 
-    this.#reportError(errorInfo);
+    this.reportError(errorInfo);
   }
 
   error(...args: any[]): void {
@@ -34,23 +34,44 @@ export class FBugPlugin implements Plugin {
       timestamp: new Date(),
     };
 
-    this.#reportError(errorInfo);
+    this.reportError(errorInfo);
   }
 
-  #reportError(errorInfo: Log) {
-    console.log("send error", errorInfo);
+  log(...args: any[]): void {
+    const errorInfo: Log = {
+      message: args
+        .map((arg) =>
+          typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+        )
+        .join(" "),
+      level: logLevel.ERROR,
+      timestamp: new Date(),
+    };
 
-    if (this.#config.reportUrl) {
-      fetch(this.#config.reportUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": this.#config.apiKey,
-        },
-        body: JSON.stringify({
-          ...errorInfo,
-        }),
-      });
-    }
+    this.reportError(errorInfo);
+  }
+
+  reportError(errorInfo: Log) {
+    fetch(`${this.#config.dsn}/errors`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...errorInfo,
+      }),
+    });
+  }
+
+  reportLog(logInfo: Log) {
+    fetch(`${this.#config.dsn}/logs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...logInfo,
+      }),
+    });
   }
 }
