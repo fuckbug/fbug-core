@@ -17,7 +17,7 @@ export class FBugPlugin implements Plugin {
         )
         .join(" "),
       level: logLevel.WARN,
-      timestamp: new Date(),
+      time: new Date().getTime(),
     };
 
     this.reportError(errorInfo);
@@ -31,7 +31,7 @@ export class FBugPlugin implements Plugin {
         )
         .join(" "),
       level: logLevel.ERROR,
-      timestamp: new Date(),
+      time: new Date().getTime(),
     };
 
     this.reportError(errorInfo);
@@ -45,7 +45,7 @@ export class FBugPlugin implements Plugin {
         )
         .join(" "),
       level: logLevel.ERROR,
-      timestamp: new Date(),
+      time: new Date().getTime(),
     };
 
     this.reportError(errorInfo);
