@@ -9,7 +9,7 @@ export class LogProvider {
   };
   #plugins: Array<Plugin>;
   #logProviderConfig: LogProviderConfig = {
-    logErrorReports: {
+    logReports: {
       log: false,
       warn: true,
       error: true,
@@ -26,13 +26,13 @@ export class LogProvider {
   }
 
   #initialize() {
-    if (this.#logProviderConfig.logErrorReports.log) {
+    if (this.#logProviderConfig.logReports.log) {
       this.#overrideLog();
     }
-    if (this.#logProviderConfig.logErrorReports.warn) {
+    if (this.#logProviderConfig.logReports.warn) {
       this.#overrideWarn();
     }
-    if (this.#logProviderConfig.logErrorReports.error) {
+    if (this.#logProviderConfig.logReports.error) {
       this.#overrideError();
     }
   }

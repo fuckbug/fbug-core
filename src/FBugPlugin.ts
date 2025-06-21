@@ -39,7 +39,7 @@ export class FBugPlugin implements Plugin {
     this.#sendLog(errorInfo);
   }
 
-  report(tag: string, level: LogLevel, payload: Object): void {
+  report(tag: string, level: LogLevel, payload?: Object): void {
     const errorInfo: Log = {
       time: this.#getTimeStamp(),
       level,

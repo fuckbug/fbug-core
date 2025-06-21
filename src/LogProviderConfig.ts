@@ -1,5 +1,5 @@
 export type LogProviderConfig = {
-  logErrorReports: {
+  logReports: {
     log: boolean;
     warn: boolean;
     error: boolean;

@@ -12,23 +12,23 @@ export class FBugSDK {
     new LogProvider(plugins, logProviderConfig);
   }
 
-  reportInfo(tag: string, payload: Object) {
+  reportInfo(tag: string, payload?: Object) {
     this.#sendReportToPlugins(tag, logLevel.DEBUG, payload);
   }
 
-  reportError(tag: string, payload: Object) {
+  reportError(tag: string, payload?: Object) {
     this.#sendReportToPlugins(tag, logLevel.DEBUG, payload);
   }
 
-  reportDebug(tag: string, payload: Object) {
+  reportDebug(tag: string, payload?: Object) {
     this.#sendReportToPlugins(tag, logLevel.DEBUG, payload);
   }
 
-  reportWarn(tag: string, payload: Object) {
+  reportWarn(tag: string, payload?: Object) {
     this.#sendReportToPlugins(tag, logLevel.WARN, payload);
   }
 
-  #sendReportToPlugins(tag: string, level: LogLevel, payload: Object) {
+  #sendReportToPlugins(tag: string, level: LogLevel, payload?: Object) {
     this.#plugins.forEach((plugin) => plugin.report(tag, level, payload));
   }
 }
