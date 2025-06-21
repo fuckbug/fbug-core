@@ -38,27 +38,33 @@ export class LogProvider {
   }
 
   #overrideError(...args: any[]) {
-    this.#originalConsole.error.apply(console, args);
+    console.error = (...args: any[]) => {
+      this.#originalConsole.error.apply(console, args);
 
-    this.#callPlugins((plugin) => {
-      plugin.error(args);
-    });
+      this.#callPlugins((plugin) => {
+        plugin.error(args);
+      });
+    };
   }
 
   #overrideLog(...args: any[]) {
-    this.#originalConsole.log.apply(console, args);
+    console.log = (...args: any[]) => {
+      this.#originalConsole.log.apply(console, args);
 
-    this.#callPlugins((plugin) => {
-      plugin.log(args);
-    });
+      this.#callPlugins((plugin) => {
+        plugin.log(args);
+      });
+    };
   }
 
   #overrideWarn(...args: any[]) {
-    this.#originalConsole.warn.apply(console, args);
+    console.warn = (...args: any[]) => {
+      this.#originalConsole.warn.apply(console, args);
 
-    this.#callPlugins((plugin) => {
-      plugin.warn(args);
-    });
+      this.#callPlugins((plugin) => {
+        plugin.warn(args);
+      });
+    };
   }
 
   #callPlugins(callback: (plugin: Plugin) => void) {

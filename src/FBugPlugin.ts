@@ -32,7 +32,7 @@ export class FBugPlugin implements Plugin {
   log(...args: any[]): void {
     const errorInfo: Log = {
       time: this.#getTimeStamp(),
-      level: logLevel.ERROR,
+      level: logLevel.INFO,
       message: this.#convertArgsToMessagge(args),
     };
 
