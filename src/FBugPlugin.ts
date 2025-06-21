@@ -10,49 +10,42 @@ export class FBugPlugin implements Plugin {
   }
 
   warn(...args: any[]): void {
-    const errorInfo: Log = {
+    this.#sendLog({
       time: this.#getTimeStamp(),
       level: logLevel.WARN,
-      message: this.#convertArgsToMessagge(args),
-    };
-
-    this.#sendLog(errorInfo);
+      message: this.#convertArgsToString(args[0]),
+      context: this.#convertArgsToString(args.slice(1)),
+    });
   }
 
   error(...args: any[]): void {
-    const errorInfo: Log = {
+    this.#sendLog({
       time: this.#getTimeStamp(),
       level: logLevel.ERROR,
-      message: this.#convertArgsToMessagge(args),
-    };
-
-    this.#sendLog(errorInfo);
+      message: this.#convertArgsToString(args[0]),
+      context: this.#convertArgsToString(args.slice(1)),
+    });
   }
 
   log(...args: any[]): void {
-    const errorInfo: Log = {
+    this.#sendLog({
       time: this.#getTimeStamp(),
       level: logLevel.INFO,
-      message: this.#convertArgsToMessagge(args),
-    };
-
-    this.#sendLog(errorInfo);
+      message: this.#convertArgsToString(args[0]),
+      context: this.#convertArgsToString(args.slice(1)),
+    });
   }
 
   report(tag: string, level: LogLevel, payload?: Object): void {
-    const errorInfo: Log = {
+    this.#sendLog({
       time: this.#getTimeStamp(),
       level,
-      message: JSON.stringify({
-        tag,
-        payload,
-      }),
-    };
-
-    this.#sendLog(errorInfo);
+      message: tag,
+      context: JSON.stringify(payload),
+    });
   }
 
-  #convertArgsToMessagge(...args: any[]): string {
+  #convertArgsToString(...args: any[]): string {
     return args
       .map((arg) =>
         typeof arg === "object" ? JSON.stringify(arg) : String(arg),
