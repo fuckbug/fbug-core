@@ -7,5 +7,5 @@ export declare class FBugPlugin implements Plugin {
     warn(...args: any[]): void;
     error(...args: any[]): void;
     log(...args: any[]): void;
-    report(tag: string, level: LogLevel, payload: Object): void;
+    report(tag: string, level: LogLevel, payload?: Object): void;
 }
