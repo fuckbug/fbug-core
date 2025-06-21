@@ -56,8 +56,6 @@ class TelegramPlugin extends Plugin {
 const plugins = [
   new FBugPlugin({
     dsn: "123456",
-    apiKey: "",
-    reportUrl: "",
   }),
 
   new TelegramPlugin()
