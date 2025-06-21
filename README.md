@@ -22,17 +22,29 @@ yarn compile
 const plugins = [
   new FBugPlugin({
     dsn: "123456",
-    apiKey: "",
-    reportUrl: "",
   })
 ]
 
-new FBugSDK(plugins);
+const fbug = new FBugSDK(plugins, {
+  logReports: {
+    log: false,
+    warn: true,
+    error: true,
+  }
+});
+
+fbug.reportInfo('Info message', { message: 'All good' })
+fbug.reportDebug('Debug message', { message: 'All fine' })
+fbug.reportWarn('Warn message', { message: 'So so' })
+fbug.reportError('Error message', { message: 'Ay, Caramba!' })
 ```
 
 ### Create own plugin
 ```ts
 class TelegramPlugin extends Plugin {
+  log(...args: any[]): void {
+    //send to telegram log
+  }
   warn(...args: any[]): void {
     //send to telegram warn
   }
