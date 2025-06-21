@@ -1,3 +1,4 @@
+import type { LogProviderConfig } from "./LogProviderConfig";
 import { Plugin } from "./Plugin";
 
 export class LogProvider {
@@ -7,35 +8,62 @@ export class LogProvider {
     warn: console.warn,
   };
   #plugins: Array<Plugin>;
+  #logProviderConfig: LogProviderConfig = {
+    logErrorReports: {
+      log: false,
+      warn: true,
+      error: true,
+    },
+  };
 
-  constructor(plugins: Array<Plugin>) {
+  constructor(
+    plugins: Array<Plugin>,
+    logProviderConfig: LogProviderConfig = this.#logProviderConfig,
+  ) {
+    this.#logProviderConfig = logProviderConfig;
     this.#plugins = plugins;
     this.#initialize();
   }
 
   #initialize() {
-    console.error = (...args: any[]) => {
-      this.#originalConsole.error.apply(console, args);
+    if (this.#logProviderConfig.logErrorReports.log) {
+      this.#overrideLog();
+    }
+    if (this.#logProviderConfig.logErrorReports.warn) {
+      this.#overrideWarn();
+    }
+    if (this.#logProviderConfig.logErrorReports.error) {
+      this.#overrideError();
+    }
+  }
 
-      this.#plugins.forEach((plugin) => {
-        plugin.error(args);
-      });
-    };
+  #overrideError(...args: any[]) {
+    this.#originalConsole.error.apply(console, args);
 
-    console.log = (...args: any[]) => {
-      this.#originalConsole.log.apply(console, args);
+    this.#callPlugins((plugin) => {
+      plugin.error(args);
+    });
+  }
 
-      this.#plugins.forEach((plugin) => {
-        plugin.log(args);
-      });
-    };
+  #overrideLog(...args: any[]) {
+    this.#originalConsole.log.apply(console, args);
 
-    console.warn = (...args: any[]) => {
-      this.#originalConsole.warn.apply(console, args);
+    this.#callPlugins((plugin) => {
+      plugin.log(args);
+    });
+  }
 
-      this.#plugins.forEach((plugin) => {
-        plugin.warn(args);
-      });
-    };
+  #overrideWarn(...args: any[]) {
+    this.#originalConsole.warn.apply(console, args);
+
+    this.#callPlugins((plugin) => {
+      plugin.warn(args);
+    });
+  }
+
+  #callPlugins(callback: (plugin: Plugin) => void) {
+    this.#plugins.forEach((plugin) => {
+      callback(plugin);
+    });
   }
 }

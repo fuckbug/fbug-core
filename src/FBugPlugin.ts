@@ -1,6 +1,6 @@
 import { FBugConfig } from "./FBugConfig";
 import { type Log } from "./Log";
-import { logLevel } from "./LogLevel";
+import { LogLevel, logLevel } from "./LogLevel";
 import { type Plugin } from "./Plugin";
 
 export class FBugPlugin implements Plugin {
@@ -11,67 +11,66 @@ export class FBugPlugin implements Plugin {
 
   warn(...args: any[]): void {
     const errorInfo: Log = {
-      message: args
-        .map((arg) =>
-          typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-        )
-        .join(" "),
+      time: this.#getTimeStamp(),
       level: logLevel.WARN,
-      time: new Date().getTime(),
+      message: this.#convertArgsToMessagge(args),
     };
 
-    this.reportError(errorInfo);
+    this.#sendLog(errorInfo);
   }
 
   error(...args: any[]): void {
     const errorInfo: Log = {
-      message: args
-        .map((arg) =>
-          typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-        )
-        .join(" "),
+      time: this.#getTimeStamp(),
       level: logLevel.ERROR,
-      time: new Date().getTime(),
+      message: this.#convertArgsToMessagge(args),
     };
 
-    this.reportError(errorInfo);
+    this.#sendLog(errorInfo);
   }
 
   log(...args: any[]): void {
     const errorInfo: Log = {
-      message: args
-        .map((arg) =>
-          typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-        )
-        .join(" "),
+      time: this.#getTimeStamp(),
       level: logLevel.ERROR,
-      time: new Date().getTime(),
+      message: this.#convertArgsToMessagge(args),
     };
 
-    this.reportError(errorInfo);
+    this.#sendLog(errorInfo);
   }
 
-  reportError(errorInfo: Log) {
-    fetch(`${this.#config.dsn}/errors`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...errorInfo,
+  report(tag: string, level: LogLevel, payload: Object): void {
+    const errorInfo: Log = {
+      time: this.#getTimeStamp(),
+      level,
+      message: JSON.stringify({
+        tag,
+        payload,
       }),
-    });
+    };
+
+    this.#sendLog(errorInfo);
   }
 
-  reportLog(logInfo: Log) {
+  #convertArgsToMessagge(...args: any[]): string {
+    return args
+      .map((arg) =>
+        typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+      )
+      .join(" ");
+  }
+
+  #getTimeStamp(): number {
+    return new Date().getTime();
+  }
+
+  #sendLog(logInfo: Log) {
     fetch(`${this.#config.dsn}/logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ...logInfo,
-      }),
+      body: JSON.stringify(logInfo),
     });
   }
 }

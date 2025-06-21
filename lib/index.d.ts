@@ -5,3 +5,4 @@ export { type Log } from "./Log";
 export { type LogLevel, logLevel } from "./LogLevel";
 export { LogProvider } from "./LogProvider";
 export { type Plugin } from "./Plugin";
+export { type LogProviderConfig } from "./LogProviderConfig";

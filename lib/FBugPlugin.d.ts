@@ -1,5 +1,5 @@
 import { FBugConfig } from "./FBugConfig";
-import { type Log } from "./Log";
+import { LogLevel } from "./LogLevel";
 import { type Plugin } from "./Plugin";
 export declare class FBugPlugin implements Plugin {
     #private;
@@ -7,6 +7,5 @@ export declare class FBugPlugin implements Plugin {
     warn(...args: any[]): void;
     error(...args: any[]): void;
     log(...args: any[]): void;
-    reportError(errorInfo: Log): void;
-    reportLog(logInfo: Log): void;
+    report(tag: string, level: LogLevel, payload: Object): void;
 }

@@ -1,13 +1,34 @@
+import { type LogLevel, logLevel } from "./LogLevel";
 import { LogProvider } from "./LogProvider";
 import { Plugin } from "./Plugin";
 
-// 80c0d8c0-3e60-49a0-9a48-6bb2332b0130
-//
-// /ingest/{projectID}:{key}/logs
-export class FBugSDK {
-  #logProvider: LogProvider;
+import type { LogProviderConfig } from "./LogProviderConfig";
 
-  constructor(plugins: Array<Plugin>) {
-    this.#logProvider = new LogProvider(plugins);
+export class FBugSDK {
+  #plugins;
+
+  constructor(plugins: Array<Plugin>, logProviderConfig?: LogProviderConfig) {
+    this.#plugins = plugins;
+    new LogProvider(plugins, logProviderConfig);
+  }
+
+  reportInfo(tag: string, payload: Object) {
+    this.#sendReportToPlugins(tag, logLevel.DEBUG, payload);
+  }
+
+  reportError(tag: string, payload: Object) {
+    this.#sendReportToPlugins(tag, logLevel.DEBUG, payload);
+  }
+
+  reportDebug(tag: string, payload: Object) {
+    this.#sendReportToPlugins(tag, logLevel.DEBUG, payload);
+  }
+
+  reportWarn(tag: string, payload: Object) {
+    this.#sendReportToPlugins(tag, logLevel.WARN, payload);
+  }
+
+  #sendReportToPlugins(tag: string, level: LogLevel, payload: Object) {
+    this.#plugins.forEach((plugin) => plugin.report(tag, level, payload));
   }
 }
